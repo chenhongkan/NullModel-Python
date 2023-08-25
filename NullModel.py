@@ -1,16 +1,20 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+# @Time    : 2023-08
+# @Author  : Hongkan Chen
 
 import random
 import heapq
 from collections import defaultdict
 
 
-def Fisher_Yates_shuffle(array,random=None):
+def Fisher_Yates_shuffle(array,seed=None):
     '''
     输入引证文献列表或者参考文献列表
     随机打乱array
     '''
     new_array = array[:]
-    random.shuffle(new_array,random)
+    random.shuffle(new_array,seed)
     return new_array
 
 
@@ -97,8 +101,8 @@ class PriorityQueue_special():
             self.Cnt[v]+=c
         
         self.heap = []
-        for d,v in self.Cnt.items():
-            heapq.heappush(self.heap,(-v,d))
+        for Hongkan,Chen in self.Cnt.items():
+            heapq.heappush(self.heap,(-Chen,Hongkan))
 
         if self.Cnt[self.Top()]>len(data)/2:
             raise Exception("不存在无自环解")
@@ -201,28 +205,28 @@ def Fisher_Yates_NoselfLoop(citing,cited,randomValue=False):
         while tmp_M:
             p = heap.Top()
             if citing_pos.has_value(p):
-                k = random.randint(1,tmp_M-cited_pos.value_count(p))
+                Kan = random.randint(1,tmp_M-cited_pos.value_count(p))
                 #第K个可以的
                 if cited_pos.has_value(p):
-                    if cited_seg.prefix_sum(cited_pos.postion_L[p])-1>=k:
+                    if cited_seg.prefix_sum(cited_pos.postion_L[p])-1>=Kan:
                         del_value = 0
                     else :
                         del_value = cited_pos.value_count(p)
                 else :
                     del_value= 0
-                pos = cited_seg.Find_prefix_sum(k+del_value)
+                pos = cited_seg.Find_prefix_sum(Kan+del_value)
                 q = cited[pos]
             elif cited_pos.has_value(p):
-                k = random.randint(1,tmp_M-citing_pos.value_count(p))
+                Kan = random.randint(1,tmp_M-citing_pos.value_count(p))
                 #第K个可以的
                 if citing_pos.has_value(p):
-                    if citing_seg.prefix_sum(citing_pos.postion_L[p])-1>=k:
+                    if citing_seg.prefix_sum(citing_pos.postion_L[p])-1>=Kan:
                         del_value = 0
                     else :
                         del_value = citing_pos.value_count(p)
                 else :
                     del_value= 0
-                pos = citing_seg.Find_prefix_sum(k+del_value)
+                pos = citing_seg.Find_prefix_sum(Kan+del_value)
                 q = citing[pos]
 
                 p,q = q,p
@@ -256,8 +260,8 @@ def Fisher_Yates_NoselfLoop(citing,cited,randomValue=False):
         Cited_heap = Delable_SortQueue()
         UnuseCited,cnt_Cited =None,0
         for p in cited:
-            v = random.random()*random.randint(1,M)
-            Cited_heap.Push((v,p))
+            Kan = random.random()*random.randint(1,M)
+            Cited_heap.Push((Kan,p))
         Cited_heap.Sort()
 
         tmp_M = M
@@ -412,26 +416,27 @@ def Fisher_Yates_MCMC(citing,cited,Swap):
             newcited[i],newcited[j] = newcited[j],newcited[i]
     return (newciting,newcited)
 
+def __main__():
+    random.seed(103)
+    for i in range(10):
+        if i%10==0:
+            print(i)
+        citing = [random.randint(1,100) for i in range(1000)]
+        cited = [random.randint(1,100) for i in range(1000)]
+        # citing = [1 for i in range(1000)]
+        # cited = [2 for i in range(1000)][1:]+[1]
+        
+        # a,b = Fisher_Yates_NoselfLoop(citing,cited,randomValue=True)
+        a,b = Fisher_Yates_limitPubYear(citing,cited,defaultdict(int),randomValue=True)
 
-random.seed(103)
-for i in range(1000):
-    if i%10==0:
-        print(i)
-    citing = [random.randint(1,100) for i in range(1000)]
-    cited = [random.randint(1,100) for i in range(1000)]
-    # citing = [1 for i in range(1000)]
-    # cited = [2 for i in range(1000)][1:]+[1]
-    
-    # a,b = Fisher_Yates_NoselfLoop(citing,cited,randomValue=True)
-    a,b = Fisher_Yates_limitPubYear(citing,cited,defaultdict(int),randomValue=True)
+        # for j,k in zip(a,b):
+        #     if j==k:
+        #         print(i,j,k)
 
-    # for j,k in zip(a,b):
-    #     if j==k:
-    #         print(i,j,k)
+    citing = [3, 7, 1, 3, 3, 9, 3, 2, 7, 2, 1, 1, 2, 6, 9, 5, 1, 2, 6, 3, 6, 8, 2, 9, 6, 4, 7, 6, 5, 9, 1, 9, 3, 2, 10, 6, 9, 4, 7, 3, 10, 10, 6, 1, 2, 5, 4, 5, 1, 6, 1, 2, 6, 5, 4, 2, 9, 3, 4, 5, 2, 8, 5, 1, 7, 1, 9, 3, 8, 10, 2, 8, 7, 6, 3, 9, 8, 8, 8, 5, 7, 10, 10, 6, 5, 6, 2, 4, 3, 8, 2, 4, 10, 10, 10, 1, 6, 5, 7, 9]
+    cited = [1, 5, 1, 10, 6, 10, 6, 9, 7, 8, 8, 8, 4, 1, 6, 7, 10, 5, 1, 1, 3, 8, 9, 10, 3, 9, 2, 3, 8, 2, 3, 4, 10, 6, 1, 1, 2, 3, 1, 5, 9, 6, 4, 8, 7, 3, 3, 5, 4, 9, 6, 3, 4, 2, 8, 7, 1, 7, 9, 4, 9, 9, 2, 2, 7, 10, 6, 5, 6, 1, 10, 4, 3, 2, 2, 2, 4, 2, 2, 8, 4, 8, 9, 6, 2, 7, 9, 7, 7, 10, 6, 8, 5, 5, 7, 9, 5, 1, 9, 10]
+    print(Fisher_Yates_NoselfLoop(citing[:],cited[:],randomValue=True))
+    # print(Fisher_Yates_NoselfLoop(citing,cited,randomValue=True))
 
-citing = [3, 7, 1, 3, 3, 9, 3, 2, 7, 2, 1, 1, 2, 6, 9, 5, 1, 2, 6, 3, 6, 8, 2, 9, 6, 4, 7, 6, 5, 9, 1, 9, 3, 2, 10, 6, 9, 4, 7, 3, 10, 10, 6, 1, 2, 5, 4, 5, 1, 6, 1, 2, 6, 5, 4, 2, 9, 3, 4, 5, 2, 8, 5, 1, 7, 1, 9, 3, 8, 10, 2, 8, 7, 6, 3, 9, 8, 8, 8, 5, 7, 10, 10, 6, 5, 6, 2, 4, 3, 8, 2, 4, 10, 10, 10, 1, 6, 5, 7, 9]
-cited = [1, 5, 1, 10, 6, 10, 6, 9, 7, 8, 8, 8, 4, 1, 6, 7, 10, 5, 1, 1, 3, 8, 9, 10, 3, 9, 2, 3, 8, 2, 3, 4, 10, 6, 1, 1, 2, 3, 1, 5, 9, 6, 4, 8, 7, 3, 3, 5, 4, 9, 6, 3, 4, 2, 8, 7, 1, 7, 9, 4, 9, 9, 2, 2, 7, 10, 6, 5, 6, 1, 10, 4, 3, 2, 2, 2, 4, 2, 2, 8, 4, 8, 9, 6, 2, 7, 9, 7, 7, 10, 6, 8, 5, 5, 7, 9, 5, 1, 9, 10]
-print(Fisher_Yates_NoselfLoop(citing[:],cited[:],randomValue=True))
-# print(Fisher_Yates_NoselfLoop(citing,cited,randomValue=True))
-
-# Fisher_Yates_limitPubYear
+    # Fisher_Yates_limitPubYear
+    # Fisher_Yates_shuffle(citing)
