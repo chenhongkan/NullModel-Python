@@ -1,7 +1,7 @@
 # NullModel-Python
 NullModel-Python是零模型的代码，具体论文参见【零模型的方法与应用——以引文网络分析为例】。内置方法涵盖线性时间置换的Fisher-Yates shuffle，以及解决自环、引用时间限制、优先连接性等提供解决方案，部分方法采用了随机值法进行优化，可以进一步提高随机置换速度。
 
-假定需要
+## 使用示例
 ```python3
 import NullModel
 citing,cited = [1,2],[2,3]
