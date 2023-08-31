@@ -38,16 +38,16 @@ newciting,newcited = Fisher_Yates_MCMC(citing,cited,Swap)
 ## 论文引用
 
 该代码包主要基于以下科研论文，如使用了本工具，请引用以下论文：
-* xxx
+* 陈洪侃,田逸凡,步一. 零模型的方法与应用——以引文网络分析为例. 2023.
 
 ```
 
-@article{xxx,
-  author = {xxxx},
+@article{NullModel-Python,
+  author = {陈洪侃,田逸凡,步一},
   journal = {xxx},
-  title = {xxx},
+  title = {零模型的方法与应用——以引文网络分析为例},
   url = {xxx},
   volume = {xxx},
-  year = xx
+  year = 2023
 }
 ```
